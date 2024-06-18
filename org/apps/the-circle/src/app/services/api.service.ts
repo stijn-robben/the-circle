@@ -8,7 +8,7 @@ import { Message } from '../models/message.model';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://145.49.57.43:5055/api';
+  private baseUrl = 'http://localhost:5055/api';
 
   constructor(private http: HttpClient) {}
 
@@ -35,8 +35,11 @@ export class ApiService {
     );
   }
 
-  sendMessage(username: string, message: { text: string }): Observable<any> {
-    const url = `${this.baseUrl}/message/${username}`;
+  sendMessage(
+    streamername: string,
+    message: { username: string; text: string }
+  ): Observable<any> {
+    const url = `${this.baseUrl}/message/${streamername}`;
     return this.http.post<any>(url, message).pipe(catchError(this.handleError));
   }
 

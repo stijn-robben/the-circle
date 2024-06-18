@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-streamer',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Voeg FormsModule toe
+  imports: [CommonModule, FormsModule],
   templateUrl: './streamer-component.html',
 })
 export class StreamerComponent implements OnInit {
@@ -32,8 +32,18 @@ export class StreamerComponent implements OnInit {
           console.error('Error fetching messages:', error);
         }
       );
+
       this.signalRService.messages$.subscribe((messages: string[]) => {
-        this.messages = messages.map((msg) => JSON.parse(msg));
+        messages.forEach((msg) => {
+          const parsedMsg = JSON.parse(msg);
+          const newMessage = new Message(
+            '',
+            parsedMsg.user,
+            parsedMsg.message,
+            new Date().toISOString()
+          );
+          this.messages.push(newMessage);
+        });
       });
 
       await this.signalRService.startConnection(this.user);
@@ -41,13 +51,16 @@ export class StreamerComponent implements OnInit {
       console.error('Error initializing chat component:', error);
     }
   }
+
   logMessage(msg: Message): boolean {
     console.log('Message in template:', msg);
     return true;
   }
 
   sendMessage(): void {
-    this.signalRService.sendMessage(this.user, this.message);
-    this.message = '';
+    if (this.message.trim() !== '') {
+      this.signalRService.sendMessage(this.user, this.message);
+      this.message = '';
+    }
   }
 }
