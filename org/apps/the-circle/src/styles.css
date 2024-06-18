@@ -1,1 +1,371 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --font1: 'Poppins';
+    --background-color: #0F0E11;
+    --background-color2: #18181B;
+    --color: #0F0E11;
+    --color2: #18181B;
+    --color3: #9c9c9e;
+    --color4: #E8442E;
+}
+
+.container {
+    --bs-gutter-x: 0% !important;
+    display: flex; /* Use Flexbox */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    
+}   
+
+.navbar{
+  margin:0 !important;
+  padding-right: 0px !important;
+  color:var(--color1) !important;
+  background-color: var(--color2) !important;
+}
+
+.col-9 {
+  padding-right: 0px !important;
+}
+
+
+body {
+    font-family: var(--font1);
+    background-color: var(--background-color) !important;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+
+.light-grey{
+    background-color: var(--background-color2);
+    min-height:100vh;
+}
+
+.no-caret::after {
+    display: none;
+}
+
+* {
+    list-style: none;
+    scroll-behavior: smooth;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+h1 {
+    color: var(--color1);
+}
+
+#video-container {
+    position: relative;
+
+    width: 65%; /* Decrease this value to make the video smaller */
+    padding-bottom: 45.25%; /* Keep this value at 56.25% for a 16:9 aspect ratio */
+    overflow: hidden;
+    margin: 0 auto; /* Center the video container horizontally */
+    
+}
+
+
+#video, #placeholder {
+    margin-top:15vh;
+    position: absolute;
+    border-radius: 20px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 65%;
+    object-fit: cover; /* Add this line */
+}
+
+
+#startButton {
+    background-color: var(--color7);
+    color: var(--color9);
+}
+
+#stopButton {
+    color: var(--color1);
+}
+
+p {
+    font-family: var(--font1) !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    color: var(--color2) !important;
+    padding:0;
+    margin:0;
+}
+
+
+
+h1{
+    font-family: var(--font1) !important;
+    font-weight: 300 !important;
+    font-size: 18 !important;
+    color: var(--color2) !important;
+
+}
+
+h2{
+    font-family: var(--font1) !important;
+    font-weight: 300 !important;
+    font-size: 16px !important;
+    color: var(--color2) !important;
+
+}
+
+h3{
+    font-family: var(--font1) !important;
+    font-weight: 600 !important;
+    font-size: 17px !important;
+    color: var(--color1) !important;
+    padding:0 !important;
+    margin:0 !important;
+    padding-top:20px;
+}
+
+h4{
+    font-family: var(--font1) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: var(--color2) !important;
+    padding:0 !important;
+    margin:0 !important;
+    margin-bottom:2px !important;
+}
+
+.card{
+  border:0 !important;
+}
+
+h5{
+  font-family: var(--font1) !important;
+  font-weight: 600 !important;
+  font-size: 22px !important;
+  color: var(--color1) !important;
+  padding:0 !important;
+  margin:0 !important;
+  padding-top:20px;
+}
+
+
+h6{
+  font-family: var(--font1) !important;
+    font-weight: 500 !important;
+    font-size: 11px !important;
+    color: white !important;
+    padding:0 !important;
+    padding-top:10px !important;
+    margin:0 !important;
+    margin-bottom:2px !important;
+}
+
+.chat-box {
+    width: 80%;
+    height: 90%;
+    margin: 0 auto; /* Center the video container horizontally */
+    margin-top: 5vh
+  }
+  
+  .chat-box .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .chat-box .card-footer {
+    padding: 10px;
+  }
+  
+  .chat-box .close {
+    border: none;
+    background: none;
+    font-size: 20px;
+  }
+
+
+
+  .profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 15px;
+  }
+  
+  .message-content {
+    flex-grow: 1;
+    max-width: 70%; /* Adjust as needed */
+    }
+  
+  .name {
+    font-weight: bold;
+  }
+  
+  .card-header{
+    background-color: white !important;
+  }
+  
+
+  .card-body {
+    flex:none !important;
+    
+  }
+
+.icon-red:hover svg{
+  fill:var(--color) !important;
+}
+
+  .min-chat-height{
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .time{
+    color:var(--color3) !important;
+    white-space: nowrap;
+}
+
+.video-buttons{
+  border-radius: 8px;
+  margin-right:13px;
+  margin-left:13px;
+  min-width:100px;
+  background-color: transparent !important;
+  color:white;
+  border:none;
+}
+
+.video-buttons:hover{
+  
+  background-color: var(--color2) !important;
+  color:white;
+  border:none;
+}
+
+
+
+  input{
+    font-family: var(--font1) !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    color: var(--color2) !important;
+    border:0 !important;
+}
+
+input {
+    outline: 0 !important;
+  }
+  
+  input:focus {
+    border: 0 !important;
+    outline: 0 !important;
+    outline-offset: 0 !important;
+  }
+  
+.leave-button{
+    background-color: var(--color4) !important;
+    font-family: var(--font1) !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    color: white !important;
+    padding:7px !important;
+    margin-bottom:10px !important;
+    padding-right: 20px !important;
+    margin-left: 5px;
+    border:0 !important;
+    border-radius: 8px !important;
+}
+
+.leave-button:hover{
+    background-color: white !important;
+    color: var(--color4) !important;
+}
+
+.button-container{
+  position: relative;
+
+  width: 65%; /* Decrease this value to make the video smaller */
+  overflow: hidden;
+  margin: 0 auto; /* Center the video container horizontally */
+
+}
+
+#chatBox {
+  display: block; /* Or "none", depending on what you want the initial state to be */
+}
+
+button:focus {
+  outline: none !important;
+}
+
+/* New CSS for stream card */
+.stream-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stream-card img {
+  transition: transform 0.3s ease;
+}
+
+.stream-card:hover img {
+  transition: 100ms;
+  border:#E8442E, 2px solid;
+}
+
+.streamer-live {
+  position: absolute;
+  font-size: 12px;
+  top: 10px;
+  left: 10px;
+  background-color: var(--color4);
+  color: white;
+  padding: 1px 8px;
+  border-radius: 5px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.image-text-container {
+  position: relative;
+}
+
+.overlay-text {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 10px !important;
+
+}
+
+.profile-picture-2{
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    margin-right: 0px;
+    margin-bottom:2px;
+  
+}
+
+/* Remove the border from the profile picture */
+.stream-card:hover img.profile-picture-2 {
+  border: none !important;
+}
+
+/* Keep the border on the placeholder image */
+.stream-card:hover img:not(.profile-picture-2) {
+  border: 2px solid #E8442E; /* Add the border style for the placeholder image */
+}
+
+.chat-box {
+    height: 90vh; /* Adjust this value to fit your needs */
+    overflow-y: auto; /* Enable vertical scrolling */
+
+}
