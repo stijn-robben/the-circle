@@ -6,10 +6,13 @@ import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { StreamerComponent } from './streamer-viewer/streamer-component';
 import { provideHttpClient } from '@angular/common/http';
-
+import { StreamListComponent } from './stream-list/stream-list.component';
+import { StreamStreamerComponent } from './streamer-streamer/streamer-streamer.component';
 @NgModule({
   declarations: [
-    StreamerComponent
+    StreamerComponent,
+    StreamListComponent,
+    StreamStreamerComponent
   ],
   imports: [
     FormsModule,
