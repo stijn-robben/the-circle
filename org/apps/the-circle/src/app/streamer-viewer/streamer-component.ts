@@ -4,6 +4,7 @@ import { ApiService } from '../services/api.service';
 import { Message } from '../models/message.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-streamer',
@@ -13,15 +14,21 @@ import { FormsModule } from '@angular/forms';
 })
 export class StreamerComponent implements OnInit {
   public messages: Message[] = [];
-  public user = 'Ammar';
+  public user: string | null = null;
   public message = '';
 
   constructor(
     private signalRService: SignalrService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.user = this.authService.getUsername();
+    if (!this.user) {
+      console.error('[StreamerComponent] No user is logged in.');
+      return;
+    }
     try {
       this.apiService.getMessages(this.user).subscribe(
         (messages: Message[]) => {
@@ -59,8 +66,12 @@ export class StreamerComponent implements OnInit {
 
   sendMessage(): void {
     if (this.message.trim() !== '') {
-      this.signalRService.sendMessage(this.user, this.message);
-      this.message = '';
+      if (this.user) {
+        this.signalRService.sendMessage(this.user, this.message);
+        this.message = '';
+      } else {
+        console.error('User is not logged in. Cannot send message.');
+      }
     }
   }
 }
