@@ -8,19 +8,24 @@ import { StreamerComponent } from './streamer-viewer/streamer-component';
 import { provideHttpClient } from '@angular/common/http';
 import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamStreamerComponent } from './streamer-streamer/streamer-streamer.component';
+import { CommonModule } from '@angular/common';
+import { ApiService } from './services/api.service';
+import { SignalrService } from './services/signalr.service';
 @NgModule({
   declarations: [
-    StreamerComponent,
+    // StreamerComponent,
     StreamListComponent,
-    StreamStreamerComponent
+    StreamStreamerComponent,
+    
   ],
   imports: [
     FormsModule,
     BrowserModule,
+    CommonModule,
     AppComponent,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
   ],
-  providers: [provideHttpClient()],
-  bootstrap: []
+  providers: [provideHttpClient(), ApiService, SignalrService],
+  bootstrap: [],
 })
-export class AppModule { }
+export class AppModule {}

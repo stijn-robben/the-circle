@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SignalrService } from '../services/signalr.service';
 import { ApiService } from '../services/api.service';
-import { Message } from '../models/message';
+import { Message } from '../models/message.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-streamer',
+  standalone: true,
+  imports: [CommonModule, FormsModule], // Voeg FormsModule toe
   templateUrl: './streamer-component.html',
 })
 export class StreamerComponent implements OnInit {
@@ -21,6 +25,7 @@ export class StreamerComponent implements OnInit {
     try {
       this.apiService.getMessages(this.user).subscribe(
         (messages: Message[]) => {
+          console.log('StreamerComponent: messages', messages);
           this.messages = messages;
         },
         (error) => {
@@ -35,6 +40,10 @@ export class StreamerComponent implements OnInit {
     } catch (error) {
       console.error('Error initializing chat component:', error);
     }
+  }
+  logMessage(msg: Message): boolean {
+    console.log('Message in template:', msg);
+    return true;
   }
 
   sendMessage(): void {
