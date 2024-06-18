@@ -66,8 +66,8 @@ h1 {
 #video-container {
     position: relative;
 
-    width: 65%; /* Decrease this value to make the video smaller */
-    padding-bottom: 45.25%; /* Keep this value at 56.25% for a 16:9 aspect ratio */
+    width: 45%; /* Decrease this value to make the video smaller */
+    padding-bottom: 29.25%; /* Keep this value at 56.25% for a 16:9 aspect ratio */
     overflow: hidden;
     margin: 0 auto; /* Center the video container horizontally */
     
@@ -75,7 +75,7 @@ h1 {
 
 
 #video, #placeholder {
-    margin-top:15vh;
+    margin-top:18vh;
     position: absolute;
     border-radius: 20px;
     top: 0;
@@ -368,4 +368,21 @@ button:focus {
     height: 90vh; /* Adjust this value to fit your needs */
     overflow-y: auto; /* Enable vertical scrolling */
 
+}
+
+.login-card{
+    padding:30vh;
+}
+
+.btn-login{
+    background-color: var(--color4) !important;
+    font-family: var(--font1) !important;
+    font-weight: 500 !important;
+    color:white;
+    font-size:13px;
+}
+
+.btn-login:hover{
+    background-color: white !important;
+    color: var(--color4) !important;
 }

@@ -8,11 +8,13 @@ import { StreamerComponent } from './streamer-viewer/streamer-component';
 import { provideHttpClient } from '@angular/common/http';
 import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamStreamerComponent } from './streamer-streamer/streamer-streamer.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
   declarations: [
     StreamerComponent,
     StreamListComponent,
-    StreamStreamerComponent
+    StreamStreamerComponent,
+    LoginComponent
   ],
   imports: [
     FormsModule,
