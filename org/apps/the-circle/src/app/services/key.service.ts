@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,7 @@ LEjwpFiJSCmKEZRSF9MY5L3J/6rMIFp9gvebyoHcoGjBt2kvw3p1Sg1gosJ0IdPJ
 IT6Rc+piu2/8va5ZC23NbFy7
   -----END PRIVATE KEY-----`;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private apiService: ApiService) {
     console.log('KeyService: constructor called.');
     this.initializePrivateKey();
   }
@@ -55,18 +56,31 @@ IT6Rc+piu2/8va5ZC23NbFy7
   }
 
   getPublicKey(username: string): Observable<CryptoKey> {
-    const url = `http://localhost:3000/publicKey/${username}`;
-    console.log(`KeyService: Fetching public key from URL: ${url}`);
     console.log(`KeyService: Fetching public key for username: ${username}`);
-    return this.http.get<{ publicKey: string }>(url).pipe(
-      switchMap((response) => {
-        console.log(
-          `Received public key for ${username}: ${response.publicKey}`
-        );
-        return from(this.importPublicKey(response.publicKey));
+    return this.apiService.getPublicKey(username).pipe(
+      switchMap((publicKeyPem) => {
+        console.log(`Received public key for ${username}: ${publicKeyPem}`);
+        return from(this.importPublicKey(publicKeyPem));
+      }),
+      catchError((error) => {
+        console.error(`Error fetching public key for ${username}:`, error);
+        throw error;
       })
     );
   }
+  // getPublicKey(username: string): Observable<CryptoKey> {
+  //   const url = `http://localhost:3000/publicKey/${username}`;
+  //   console.log(`KeyService: Fetching public key from URL: ${url}`);
+  //   console.log(`KeyService: Fetching public key for username: ${username}`);
+  //   return this.http.get<{ publicKey: string }>(url).pipe(
+  //     switchMap((response) => {
+  //       console.log(
+  //         `Received public key for ${username}: ${response.publicKey}`
+  //       );
+  //       return from(this.importPublicKey(response.publicKey));
+  //     })
+  //   );
+  // }
 
   public async importPrivateKey(pem: string): Promise<CryptoKey> {
     console.log('KeyService: Importing private key.');
