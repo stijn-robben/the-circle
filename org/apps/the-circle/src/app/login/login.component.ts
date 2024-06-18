@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-chat',
-  standalone: true,
+  selector: 'app-login',
+  //standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
 })

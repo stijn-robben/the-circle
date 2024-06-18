@@ -1,4 +1,4 @@
-<div class="" style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+<!-- <div class="" style="display: flex; justify-content: center; align-items: center; height: 80vh;">
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h3 class="card-title mb-4">Sign in <input type="text" name="" id=""></h3>
@@ -6,4 +6,16 @@
         <button class="btn btn-login" style="width: 100%;">Login</button>
       </div>
     </div>
+  </div> -->
+
+  <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h3 class="card-title mb-4">Sign in</h3>
+        <input type="text" class="form-control my-3 py-2" placeholder="Username" [(ngModel)]="username" style="margin-bottom: 10px;">
+        <button class="btn btn-login" style="width: 100%;" (click)="login()">Login</button>
+        <div *ngIf="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
+      </div>
+    </div>
   </div>
+  

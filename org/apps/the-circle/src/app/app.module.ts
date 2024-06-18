@@ -14,15 +14,16 @@ import { LoginComponent } from './login/login.component';
     StreamerComponent,
     StreamListComponent,
     StreamStreamerComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     FormsModule,
     BrowserModule,
     AppComponent,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    LoginComponent,
   ],
   providers: [provideHttpClient()],
-  bootstrap: []
+  bootstrap: [],
 })
-export class AppModule { }
+export class AppModule {}
