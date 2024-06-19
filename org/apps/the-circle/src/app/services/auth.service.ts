@@ -73,5 +73,8 @@ export class AuthService {
     console.log(`Get currentUsername from localStorage: ${username}`);
     return username;
   }
-  
+  getPublicKey(username: string) {
+    const streamername = this.keyService.getPublicKey(username);
+    return streamername;
+  }
 }
