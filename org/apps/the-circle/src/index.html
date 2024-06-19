@@ -106,5 +106,23 @@
       }
     });
 </script>
+<script>
+  function scrollToBottom() {
+    var chatBox = document.getElementById("chatMessages");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Call this function whenever a new message is added
+  function sendMessage() {
+    // Your existing sendMessage logic
+
+    // After sending the message, scroll to bottom
+    scrollToBottom();
+  }
+
+  // Ensure chat is scrolled down when the page loads
+  window.onload = scrollToBottom;
+</script>
+
 </body>
 </html>

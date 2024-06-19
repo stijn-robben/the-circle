@@ -69,9 +69,23 @@ export class StreamerComponent implements OnInit {
       if (this.user) {
         this.signalRService.sendMessage(this.user, this.message);
         this.message = '';
+        this.scrollToBottom();
+
       } else {
         console.error('User is not logged in. Cannot send message.');
       }
     }
   }
+
+  scrollToBottom() {
+    const chatBox = document.getElementById("chatMessages");
+    if (chatBox) {
+      setTimeout(() => {
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 100);  // Delay to ensure the DOM is updated
+    }
+  }
+
+
+
 }
