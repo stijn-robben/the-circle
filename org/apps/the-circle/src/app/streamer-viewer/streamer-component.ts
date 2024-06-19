@@ -45,7 +45,7 @@ export class StreamerComponent implements OnInit {
       return;
     }
     try {
-      this.apiService.getMessages(this.user).subscribe(
+      this.apiService.getMessages(this.streamername!).subscribe(
         (messages: Message[]) => {
           console.log('StreamerComponent: messages', messages);
           this.messages = messages;
