@@ -42,6 +42,7 @@ export class StreamStreamerComponent implements OnInit, OnDestroy {
       console.error('[StreamerComponent] No user is logged in.');
       return;
     }
+    console.log(this.user)
     try {
       this.apiService.getMessages(this.user).subscribe(
         (messages: Message[]) => {

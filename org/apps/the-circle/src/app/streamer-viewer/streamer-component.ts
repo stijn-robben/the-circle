@@ -5,6 +5,7 @@ import { Message } from '../models/message.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-streamer',
@@ -16,14 +17,19 @@ export class StreamerComponent implements OnInit {
   public messages: Message[] = [];
   public user: string | null = null;
   public message = '';
+  public streamer = '';
 
   constructor(
     private signalRService: SignalrService,
     private apiService: ApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.route.params.subscribe(params => {
+      this.streamer = params['username'];
+      });
     this.user = this.authService.getUsername();
     if (!this.user) {
       console.error('[StreamerComponent] No user is logged in.');
