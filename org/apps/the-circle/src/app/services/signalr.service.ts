@@ -29,6 +29,7 @@ export class SignalrService {
         };
 
         this.socket.onmessage = async (event) => {
+          //onmessage event being called
           const data = JSON.parse(event.data);
           console.log('Received message from server:', data);
 
@@ -106,10 +107,14 @@ export class SignalrService {
         console.log(`Signing message: ${message}`);
         const signature = await this.keyService.signMessage(message);
         console.log('Message signed successfully. Signature:', signature);
-
+  
+        // Generate a unique ID for the message
+        const messageId = Date.now().toString();
+  
         console.log(`Sending message: ${message} by user: ${user}`);
         this.socket.send(
           JSON.stringify({
+            id: messageId,
             user,
             message,
             signature,

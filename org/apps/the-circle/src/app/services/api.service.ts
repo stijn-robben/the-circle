@@ -44,6 +44,7 @@ export class ApiService {
     streamername: string,
     message: { username: string; text: string }
   ): Observable<any> {
+    console.log('sendMessage called with', streamername, message);
     const url = `${this.baseUrl}/message/${streamername}`;
     return this.http.post<any>(url, message).pipe(catchError(this.handleError));
   }

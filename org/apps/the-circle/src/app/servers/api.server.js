@@ -52,7 +52,13 @@ app.get('/api/message/:username', (req, res) => {
 });
 app.post('/api/message', (req, res) => {
   const newMessage = req.body;
-  newMessage._id = Date.now().toString();
+
+  // Check if a message with the same ID already exists
+  const existingMessage = messages.find((msg) => msg._id === newMessage._id);
+  if (existingMessage) {
+    return res.status(409).json({ message: 'Message already exists' });
+  }
+
   newMessage.dateTime = new Date().toISOString();
   messages.push(newMessage);
   res.status(201).json(newMessage);
