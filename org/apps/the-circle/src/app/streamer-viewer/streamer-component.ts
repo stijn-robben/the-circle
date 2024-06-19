@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SignalrService } from '../services/signalr.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-viewer',
@@ -16,10 +17,12 @@ export class ViewerComponent implements OnInit, OnDestroy {
   private subscription: Subscription | undefined;
   public user: string | null = ''; // Hardcoded viewer for testing
   public message = '';
+  public streamername: string | null = null;
 
   constructor(
     private signalRService: SignalrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnDestroy(): void {
@@ -30,8 +33,21 @@ export class ViewerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.authService.getUsername();
-    this.subscription = this.signalRService.messages$.subscribe(
-      (messages: string[]) => {
+    if (this.user) {
+      this.signalRService.setUsername(this.user); // Set username in service
+    }
+    this.subscription = this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const streamername = params.get('username')!;
+          this.streamername = streamername;
+          this.signalRService.setStreamerName(streamername); // Set streamer name in service
+          return Promise.resolve();
+        })
+      )
+      .subscribe();
+    this.subscription.add(
+      this.signalRService.messages$.subscribe((messages: string[]) => {
         messages.forEach((msg) => {
           const parsedMsg = JSON.parse(msg);
           const newMessage = {
@@ -44,7 +60,7 @@ export class ViewerComponent implements OnInit, OnDestroy {
           }
         });
         this.scrollToBottom();
-      }
+      })
     );
 
     this.signalRService.startConnection();

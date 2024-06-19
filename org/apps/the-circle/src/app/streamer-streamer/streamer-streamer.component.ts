@@ -31,30 +31,34 @@ export class StreamStreamerComponent implements OnInit, OnDestroy {
         switchMap((params) => {
           const streamername = params.get('username')!;
           this.streamername = streamername;
+          this.signalRService.setStreamerName(streamername); // Set streamer name in service
           return Promise.resolve();
         })
       )
       .subscribe();
     this.user = this.authService.getUsername();
-    if (!this.user) {
+    if (this.user) {
+      this.signalRService.setUsername(this.user); // Set username in service
+    } else {
       console.error('[StreamerComponent] No user is logged in.');
       return;
     }
-
-    this.signalRService.messages$.subscribe((messages: string[]) => {
-      messages.forEach((msg) => {
-        const parsedMsg = JSON.parse(msg);
-        const newMessage = {
-          id: parsedMsg.id,
-          user: parsedMsg.user,
-          message: parsedMsg.message,
-        };
-        if (!this.messages.some((m) => m.id === newMessage.id)) {
-          this.messages.push(newMessage);
-        }
-      });
-      this.scrollToBottom();
-    });
+    this.subscription.add(
+      this.signalRService.messages$.subscribe((messages: string[]) => {
+        messages.forEach((msg) => {
+          const parsedMsg = JSON.parse(msg);
+          const newMessage = {
+            id: parsedMsg.id,
+            user: parsedMsg.user,
+            message: parsedMsg.message,
+          };
+          if (!this.messages.some((m) => m.id === newMessage.id)) {
+            this.messages.push(newMessage);
+          }
+        });
+        this.scrollToBottom();
+      })
+    );
 
     await this.signalRService.startConnection();
   }

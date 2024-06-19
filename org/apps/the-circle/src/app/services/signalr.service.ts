@@ -3,6 +3,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { KeyService } from './key.service';
 import { ApiService } from './api.service';
 import { v4 as uuidv4 } from 'uuid';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,20 @@ export class SignalrService {
   private messages = new BehaviorSubject<string[]>([]);
   messages$ = this.messages.asObservable();
   private privateKey!: CryptoKey;
+  private streamername: string | null = null;
+  private username: string | null = null;
 
-  constructor(private keyService: KeyService, private apiService: ApiService) {}
-
+  constructor(
+    private keyService: KeyService,
+    private apiService: ApiService,
+    private route: ActivatedRoute
+  ) {}
+  setStreamerName(streamername: string): void {
+    this.streamername = streamername;
+  }
+  setUsername(username: string): void {
+    this.username = username;
+  }
   async startConnection(): Promise<void> {
     try {
       await this.keyService.initializePrivateKey();
@@ -27,6 +39,9 @@ export class SignalrService {
 
         this.socket.onopen = () => {
           console.log('WebSocket connection started');
+          if (this.streamername) {
+            this.fetchHistory(this.streamername);
+          }
         };
 
         this.socket.onmessage = async (event) => {
@@ -46,6 +61,26 @@ export class SignalrService {
 
           if (isValid) {
             this.messages.next([...this.messages.value, message]);
+            console.log('[SignalrService] streamerName: ', this.streamername);
+            if (this.streamername !== this.username) {
+              const messageData = {
+                username: parsedMessage.user,
+                text: parsedMessage.message,
+                time: new Date().toISOString(),
+              };
+              this.apiService
+                .sendMessage(this.streamername!, messageData)
+                .subscribe(
+                  () => {
+                    console.log('Message sent to API successfully.');
+                  },
+                  (error) => {
+                    console.error('Error sending message to API:', error);
+                  }
+                );
+            } else {
+              console.error('Streamer name is not set.');
+            }
           } else {
             console.error('Invalid message signature');
           }
@@ -77,5 +112,28 @@ export class SignalrService {
     } else {
       console.error('Cannot send message. WebSocket is not open.');
     }
+  }
+  private fetchHistory(streamername: string): void {
+    this.apiService.getMessages(streamername).subscribe(
+      (messages) => {
+        console.log('Fetched history messages:', messages);
+        const historyMessages = messages.map((message) =>
+          JSON.stringify({
+            id: message._id,
+            user: message.username,
+            message: message.text,
+            timestamp: message.dateTime,
+          })
+        );
+        this.messages.next([...this.messages.value, ...historyMessages]);
+        console.log(
+          'History messages added to BehaviorSubject:',
+          this.messages.value
+        );
+      },
+      (error) => {
+        console.error('Error fetching history messages:', error);
+      }
+    );
   }
 }
