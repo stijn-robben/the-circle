@@ -1,42 +1,71 @@
-const express = require('express');
-const http = require('http');
 const WebSocket = require('ws');
 
-const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server, path: '/chatHub' });
+const server = new WebSocket.Server({ port: 5000 });
 
-wss.on('connection', (ws) => {
-  console.log('New connection established');
+server.on('connection', (socket) => {
+  console.log('New client connected');
 
-  ws.on('message', (message) => {
-    const parsedMessage = JSON.parse(message);
-    console.log(
-      `Received message from ${parsedMessage.user}: ${parsedMessage.message}`
-    );
+  socket.on('message', (message) => {
+    console.log('Received:', message);
 
-    // Broadcast the message to all connected clients
-    wss.clients.forEach((client) => {
+    // Echo the received message back to all connected clients
+    server.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            user: parsedMessage.user,
-            message: parsedMessage.message,
-            signature: parsedMessage.signature,
-            publicKey: parsedMessage.publicKey,
-          })
-        );
+        client.send(message);
       }
     });
   });
 
-  ws.on('close', () => {
-    console.log('Connection closed');
+  socket.on('close', () => {
+    console.log('Client disconnected');
+  });
+
+  socket.on('error', (error) => {
+    console.error('WebSocket error:', error);
   });
 });
 
-const PORT = 5000;
-const HOST = '145.49.14.169';
-server.listen(PORT, HOST, () => {
-  console.log(`Server is running on http://${HOST}:${PORT}`);
-});
+console.log('WebSocket server is running on ws://localhost:5000');
+
+// const express = require('express');
+// const http = require('http');
+// const WebSocket = require('ws');
+
+// const app = express();
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server, path: '/chatHub' });
+
+// wss.on('connection', (ws) => {
+//   console.log('New connection established');
+
+//   ws.on('message', (message) => {
+//     const parsedMessage = JSON.parse(message);
+//     console.log(
+//       `Received message from ${parsedMessage.user}: ${parsedMessage.message}`
+//     );
+
+//     // Broadcast the message to all connected clients
+//     wss.clients.forEach((client) => {
+//       if (client.readyState === WebSocket.OPEN) {
+//         client.send(
+//           JSON.stringify({
+//             user: parsedMessage.user,
+//             message: parsedMessage.message,
+//             signature: parsedMessage.signature,
+//             publicKey: parsedMessage.publicKey,
+//           })
+//         );
+//       }
+//     });
+//   });
+
+//   ws.on('close', () => {
+//     console.log('Connection closed');
+//   });
+// });
+
+// const PORT = 5000;
+// const HOST = '192.168.1.123';
+// server.listen(PORT, HOST, () => {
+//   console.log(`Server is running on http://${HOST}:${PORT}`);
+// });

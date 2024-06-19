@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { StreamerComponent } from './streamer-viewer/streamer-component';
+import { ViewerComponent } from './streamer-viewer/streamer-component';
 import { provideHttpClient } from '@angular/common/http';
 import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamStreamerComponent } from './streamer-streamer/streamer-streamer.component';
@@ -13,10 +13,10 @@ import { ApiService } from './services/api.service';
 import { SignalrService } from './services/signalr.service';
 @NgModule({
   declarations: [
-    // StreamerComponent,
+    // ViewerComponent,
     AppComponent,
     // StreamListComponent,
-    StreamStreamerComponent 
+    // StreamStreamerComponent,
   ],
   imports: [
     FormsModule,

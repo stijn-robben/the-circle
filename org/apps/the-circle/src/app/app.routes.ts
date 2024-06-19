@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
-import { StreamerComponent } from './streamer-viewer/streamer-component';
 import { StreamListComponent } from './stream-list/stream-list.component';
 import { StreamStreamerComponent } from './streamer-streamer/streamer-streamer.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './gurad/auth.gurad';
+import { ViewerComponent } from './streamer-viewer/streamer-component';
 
 export const appRoutes: Route[] = [
   { path: '', component: LoginComponent, canActivate: [AuthGuard] },
@@ -13,7 +13,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },
   { path: 'login', component: LoginComponent },
-  { path: 'viewer', component: StreamerComponent, canActivate: [AuthGuard] },
+  { path: 'viewer', component: ViewerComponent, canActivate: [AuthGuard] },
   {
     path: 'stream-list',
     component: StreamListComponent,
@@ -23,9 +23,10 @@ export const appRoutes: Route[] = [
     path: 'streamer/:username',
     component: StreamStreamerComponent,
     canActivate: [AuthGuard],
-  },{
+  },
+  {
     path: 'viewer/:username',
-    component: StreamerComponent,
+    component: ViewerComponent,
     canActivate: [AuthGuard],
   },
 ];

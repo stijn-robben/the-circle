@@ -56,10 +56,10 @@
         <div class="card-body d-flex align-items-start" id="chatMessages" *ngFor="let msg of messages">
           <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture">
           <div class="message-content">
-            <h4 class="name">{{ msg.username }}</h4>
-            <p class="card-text">{{ msg.text }}</p>
+            <h4 class="name">{{ msg }}</h4>
+            <!-- <p class="card-text">{{ msg.text }}</p> -->
           </div>
-          <p class="time">{{ msg.dateTime | date:'shortTime' }}</p>
+          <!-- <p class="time">{{ msg.dateTime | date:'shortTime' }}</p> -->
         </div>
       </div>
       <div class="input-group my-1 mt-3">
