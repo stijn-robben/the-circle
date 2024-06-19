@@ -21,9 +21,9 @@ export class SignalrService {
       this.keyService['privateKeyPem']
     );
     await this.keyService.fetchAndVerifyPublicKey(streamername);
-    this.keyService.getPublicKey(streamername).subscribe(
-      async (publicKey) => {
-        this.publicKey = publicKey;
+    // this.keyService.getPublicKey(streamername).subscribe(
+    //   async (publicKey) => {
+    //     this.publicKey = publicKey;
         console.log(`KeyService: Public key imported successfully.`);
         if (typeof window !== 'undefined' && 'WebSocket' in window) {
           this.socket = new WebSocket('ws://145.49.14.169:5000/chatHub');
@@ -35,7 +35,9 @@ export class SignalrService {
           this.socket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
             console.log('Received message from server:', data);
-
+            this.keyService.getPublicKey(data.username).subscribe(
+              async (publicKey) => {
+                this.publicKey = publicKey;
             const isValid = await this.keyService.verifySignature(
               data.message,
               data.signature,

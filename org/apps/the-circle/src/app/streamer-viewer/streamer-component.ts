@@ -5,7 +5,8 @@ import { Message } from '../models/message.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import {ActivatedRoute, Router} from "@angular/router";
+import { Subscription, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-streamer',
@@ -16,6 +17,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class StreamerComponent implements OnInit {
   public messages: Message[] = [];
   public user: string | null = null;
+  subscription: Subscription | undefined = undefined;
+
+  public streamername: string | null = null;
   public message = '';
   public streamer = '';
 
@@ -23,13 +27,19 @@ export class StreamerComponent implements OnInit {
     private signalRService: SignalrService,
     private apiService: ApiService,
     private authService: AuthService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.route.params.subscribe(params => {
-      this.streamer = params['username'];
-      });
+    this.subscription = this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const streamername = params.get('username')!;
+          this.streamername = streamername;
+          return Promise.resolve();
+        })
+      )
+      .subscribe();
     this.user = this.authService.getUsername();
     if (!this.user) {
       console.error('[StreamerComponent] No user is logged in.');
@@ -59,7 +69,7 @@ export class StreamerComponent implements OnInit {
         });
       });
 
-      await this.signalRService.startConnection(this.user);
+      await this.signalRService.startConnection(this.streamername!);
     } catch (error) {
       console.error('Error initializing chat component:', error);
     }
@@ -76,7 +86,6 @@ export class StreamerComponent implements OnInit {
         this.signalRService.sendMessage(this.user, this.message);
         this.message = '';
         this.scrollToBottom();
-
       } else {
         console.error('User is not logged in. Cannot send message.');
       }
@@ -84,14 +93,11 @@ export class StreamerComponent implements OnInit {
   }
 
   scrollToBottom() {
-    const chatBox = document.getElementById("chatMessages");
+    const chatBox = document.getElementById('chatMessages');
     if (chatBox) {
       setTimeout(() => {
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 100);  // Delay to ensure the DOM is updated
+      }, 100); // Delay to ensure the DOM is updated
     }
   }
-
-
-
 }
