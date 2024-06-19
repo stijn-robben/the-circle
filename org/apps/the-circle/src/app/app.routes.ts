@@ -20,7 +20,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },{
     path: 'streamer/:username',
-    component: StreamListComponent,
+    component: StreamStreamerComponent,
     canActivate: [AuthGuard],
   },
 ];
