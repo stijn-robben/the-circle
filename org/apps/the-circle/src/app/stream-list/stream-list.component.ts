@@ -37,4 +37,9 @@ export class StreamListComponent implements OnInit {
   startStreaming(): void {
     this.router.navigate(['/streamer', this.username]);
   }
+
+  redirectToViewer(username: string): void {
+    this.router.navigate(['/viewer', username]);
+  }
+
 }

@@ -36,7 +36,7 @@
 <div class="container">
     <div class="row pt-5">
       <div class="col-4" *ngFor="let username of usernames$ | async">
-        <a>
+        <a (click)="redirectToViewer(username)">
           <div class="card stream-card">
             <div class="streamer-live">LIVE</div>
             <div class="image-text-container">
