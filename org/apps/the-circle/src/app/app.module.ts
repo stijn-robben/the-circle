@@ -14,9 +14,9 @@ import { SignalrService } from './services/signalr.service';
 @NgModule({
   declarations: [
     // StreamerComponent,
-    StreamListComponent,
-    StreamStreamerComponent,
-    
+    AppComponent,
+    // StreamListComponent,
+    StreamStreamerComponent 
   ],
   imports: [
     FormsModule,
@@ -26,6 +26,6 @@ import { SignalrService } from './services/signalr.service';
     RouterModule.forRoot(appRoutes),
   ],
   providers: [provideHttpClient(), ApiService, SignalrService],
-  bootstrap: [],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
