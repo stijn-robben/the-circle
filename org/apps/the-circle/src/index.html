@@ -58,6 +58,7 @@
       function startStream() {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
           .then(stream => {
+            startCapture();
             video.srcObject = stream;
             video.classList.remove('d-none');
             placeholder.classList.add('d-none');
@@ -73,6 +74,7 @@
       }
 
       function stopStream() {
+        stopCapture();
         let stream = video.srcObject;
         let tracks = stream.getTracks();
         tracks.forEach(track => track.stop());
@@ -89,6 +91,7 @@
       function toggleMic(micOn) {
         let micSVG = document.getElementById('micOn');
         if (micOn) {
+          toggleMicrophone()
           micSVG.innerHTML = `
             <svg id="micOn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
               <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/>
@@ -96,6 +99,7 @@
             </svg>
           `;
         } else {
+          toggleMicrophone()
           micSVG.innerHTML = `
             <svg id="micOff" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
               <path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4 4 0 0 0 12 8V7a.5.5 0 0 1 1 0zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a5 5 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4m3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3"/>
@@ -120,9 +124,115 @@
     scrollToBottom();
   }
 
+  const CHUNK_SIZE = 1024 * 1024; // 1MB chunks for hashing (adjust as needed)
+  let mediaStream;
+  let mediaRecorder;
+  let isCapturing = false;
+  let requestInProgress = false;
+
+  async function startCapture() {
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: 640,
+          height: 480,
+          frameRate: { ideal: 30, max: 60 },
+        },
+        audio: true,
+      });
+      document.getElementById("video").srcObject = mediaStream;
+
+      mediaRecorder = new MediaRecorder(mediaStream, {
+        mimeType: "video/webm; codecs=vp8",
+        videoBitsPerSecond: 2 * 1024 * 1024,
+      });
+      mediaRecorder.ondataavailable = handleDataAvailable;
+      mediaRecorder.start(400); // Capture in chunks of 400ms
+
+      isCapturing = true;
+    } catch (err) {
+      console.error("Error capturing media: ", err);
+    }
+  }
+
+  function stopCapture() {
+    isCapturing = false;
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+    }
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+    }
+  }
+
+  async function handleDataAvailable(event) {
+    if (event.data.size > 0) {
+      if (!requestInProgress) {
+        requestInProgress = true;
+
+        const formData = new FormData();
+        formData.append("video", event.data);
+
+        // Calculate SHA-256 hash of the chunk
+        const hash = await calculateHash(event.data);
+        formData.append("hash", hash);
+
+        try {
+          const response = await fetch("http://145.49.14.45:3000/stream/Ammar", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          console.log("Video chunk uploaded successfully");
+        } catch (error) {
+          console.error("Failed to upload video chunk", error);
+        } finally {
+          requestInProgress = false;
+        }
+      }
+    }
+  }
+
+  async function calculateHash(data) {
+    const buffer = await data.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  function toggleBlackScreen() {
+    const blackOverlay = document.getElementById("blackOverlay");
+    if (
+      blackOverlay.style.display === "none" ||
+      blackOverlay.style.display === ""
+    ) {
+      blackOverlay.style.display = "block";
+    } else {
+      blackOverlay.style.display = "none";
+    }
+  }
+
+  function toggleMicrophone() {
+    if (mediaStream) {
+      const audioTracks = mediaStream.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+    }
+  }
+
+
+
+
   // Ensure chat is scrolled down when the page loads
   window.onload = scrollToBottom;
 </script>
+
 
 </body>
 </html>

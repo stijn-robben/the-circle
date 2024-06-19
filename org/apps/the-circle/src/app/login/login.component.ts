@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  username: string = '';
+  username = '';
   loginError: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
