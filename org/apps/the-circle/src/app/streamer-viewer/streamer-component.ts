@@ -21,6 +21,7 @@ export class StreamerComponent implements OnInit {
 
   public streamername: string | null = null;
   public message = '';
+  public streamer = '';
 
   constructor(
     private signalRService: SignalrService,
