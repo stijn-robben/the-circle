@@ -34,72 +34,20 @@
 
 </div>
 <div class="container">
-<div class="row pt-5">
-  <div class="col-4">
-      <a routerLink="/streamer">
-      <div class="card stream-card">
-          <div class="streamer-live">LIVE</div>
-          <div class="image-text-container">
+    <div class="row pt-5">
+      <div class="col-4" *ngFor="let username of usernames ">
+        <a>
+          <div class="card stream-card">
+            <div class="streamer-live">LIVE</div>
+            <div class="image-text-container">
               <img src="https://stijnrobben.nl/img/placeholder.png" alt="Placeholder" class="card-img-top">
               <h4 class="text-white overlay-text">
-                  <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
-                  Stijn Robben
+                <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
+                {{username}}
               </h4>
-          </div>
-      </div> 
-  </a>   
+            </div>
+          </div> 
+        </a>   
+      </div>
+    </div>
   </div>
-  <div class="col-4">
-      <div class="card stream-card">
-          <div class="streamer-live">LIVE</div>
-          <div class="image-text-container">
-              <img src="https://stijnrobben.nl/img/placeholder.png" alt="Placeholder" class="card-img-top">
-              <h4 class="text-white overlay-text">
-                  <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
-                  Stijn Robben
-              </h4>
-          </div>
-      </div>    
-  </div>
-  <div class="col-4">
-      <div class="card stream-card">
-          <div class="streamer-live">LIVE</div>
-          <div class="image-text-container">
-              <img src="https://stijnrobben.nl/img/placeholder.png" alt="Placeholder" class="card-img-top">
-              <h4 class="text-white overlay-text">
-                  <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
-                  Stijn Robben
-              </h4>
-          </div>
-      </div>    
-  </div>
-</div>
-
-
-<div class="row pt-5">
-  <div class="col-4">
-      <div class="card stream-card">
-          <div class="streamer-live">LIVE</div>
-          <div class="image-text-container">
-              <img src="https://stijnrobben.nl/img/placeholder.png" alt="Placeholder" class="card-img-top">
-              <h4 class="text-white overlay-text">
-                  <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
-                  Stijn Robben
-              </h4>
-          </div>
-      </div>    
-  </div>
-  <div class="col-4">
-      <div class="card stream-card">
-          <div class="streamer-live">LIVE</div>
-          <div class="image-text-container">
-              <img src="https://stijnrobben.nl/img/placeholder.png" alt="Placeholder" class="card-img-top">
-              <h4 class="text-white overlay-text">
-                  <img src="https://stijnrobben.nl/img/pfp_placeholder.png" alt="Profile Picture" class="profile-picture-2 py-1 px-1 pl-0">
-                  Stijn Robben
-              </h4>
-          </div>
-      </div>    
-  </div>
-  </div>
-</div>

@@ -20,6 +20,11 @@ export class ApiService {
     );
   }
 
+  getAllPersons(): Observable<string[]> {
+    const url = `${this.baseUrl}/transparentPerson/usernames`;
+    return this.http.get<any>(url).pipe(catchError(this.handleError));
+  }
+
   getTransparentPerson(username: string): Observable<any> {
     const url = `${this.baseUrl}/transparentPerson/${username}`;
     return this.http.get<any>(url).pipe(catchError(this.handleError));
