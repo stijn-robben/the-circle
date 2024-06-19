@@ -11,103 +11,113 @@ export class SignalrService {
   private messages = new BehaviorSubject<string[]>([]);
   messages$ = this.messages.asObservable();
   private privateKey!: CryptoKey;
-  private publicKey!: CryptoKey;
 
   constructor(private keyService: KeyService, private apiService: ApiService) {}
 
   async startConnection(streamername: string): Promise<void> {
-    await this.keyService.initializePrivateKey();
-    this.privateKey = await this.keyService.importPrivateKey(
-      this.keyService['privateKeyPem']
-    );
-    await this.keyService.fetchAndVerifyPublicKey(streamername);
-    // this.keyService.getPublicKey(streamername).subscribe(
-    //   async (publicKey) => {
-    //     this.publicKey = publicKey;
-        console.log(`KeyService: Public key imported successfully.`);
-        if (typeof window !== 'undefined' && 'WebSocket' in window) {
-          this.socket = new WebSocket('ws://145.49.14.169:5000/chatHub');
+    try {
+      await this.keyService.initializePrivateKey();
+      this.privateKey = await this.keyService.importPrivateKey(
+        this.keyService['privateKeyPem']
+      );
 
-          this.socket.onopen = () => {
-            console.log('Connection started');
-          };
+      if (typeof window !== 'undefined' && 'WebSocket' in window) {
+        this.socket = new WebSocket('ws://145.49.14.169:5000/chatHub');
 
-          this.socket.onmessage = async (event) => {
-            const data = JSON.parse(event.data);
-            console.log('Received message from server:', data);
-            this.keyService.getPublicKey(data.username).subscribe(
-              async (publicKey) => {
-                this.publicKey = publicKey;
-            const isValid = await this.keyService.verifySignature(
-              data.message,
-              data.signature,
-              this.publicKey
-            );
+        this.socket.onopen = () => {
+          console.log('Connection started');
+        };
 
-            console.log(
-              `KeyService: Signature verification completed. Valid: ${isValid}`
-            );
+        this.socket.onmessage = async (event) => {
+          const data = JSON.parse(event.data);
+          console.log('Received message from server:', data);
 
-            if (isValid) {
-              const displayMessage = JSON.stringify({
-                user: data.user,
-                message: data.message,
-              });
-              this.messages.next([...this.messages.value, displayMessage]);
+          this.keyService.getPublicKey(data.user).subscribe(
+            async (publicKey) => {
               console.log(
-                'Message and signature verification completed. Valid: ' +
-                  isValid
+                `Fetched public key for user ${data.user}:`,
+                publicKey
               );
-              this.apiService
-                .sendMessage(streamername, {
-                  username: data.user,
-                  text: data.message,
-                })
-                .subscribe(
-                  (response) => {
-                    console.log('Message saved to database:', response);
-                  },
-                  (error) => {
-                    console.error('Error saving message to database:', error);
-                  }
+
+              const isValid = await this.keyService.verifySignature(
+                data.message,
+                data.signature,
+                publicKey
+              );
+
+              console.log(
+                `Signature verification completed for user ${data.user}. Valid: ${isValid}`
+              );
+
+              if (isValid) {
+                const displayMessage = JSON.stringify({
+                  user: data.user,
+                  message: data.message,
+                });
+                this.messages.next([...this.messages.value, displayMessage]);
+                console.log(
+                  'Message and signature verification completed. Valid:',
+                  isValid
                 );
-            } else {
-              console.warn('Invalid signature. Message will not be displayed.');
+
+                this.apiService
+                  .sendMessage(streamername, {
+                    username: data.user,
+                    text: data.message,
+                  })
+                  .subscribe(
+                    (response) => {
+                      console.log('Message saved to database:', response);
+                    },
+                    (error) => {
+                      console.error('Error saving message to database:', error);
+                    }
+                  );
+              } else {
+                console.warn(
+                  'Invalid signature. Message will not be displayed.'
+                );
+              }
+            },
+            (error) => {
+              console.error('Error fetching public key for user:', error);
             }
-          };
+          );
+        };
 
-          this.socket.onerror = (error) => {
-            console.error('WebSocket error: ' + error);
-          };
+        this.socket.onerror = (error) => {
+          console.error('WebSocket error:', error);
+        };
 
-          this.socket.onclose = () => {
-            console.log('WebSocket connection closed');
-          };
-        } else {
-          console.log('WebSocket is not available in this environment.');
-        }
-      },
-      (error) => {
-        console.error('Error fetching public key:', error);
+        this.socket.onclose = () => {
+          console.log('WebSocket connection closed');
+        };
+      } else {
+        console.log('WebSocket is not available in this environment.');
       }
-    );
+    } catch (error) {
+      console.error('Error initializing connection:', error);
+    }
   }
 
   async sendMessage(user: string, message: string) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      console.log(`KeyService: Signing message: ${message}`);
-      const signature = await this.keyService.signMessage(message);
-      console.log(`KeyService: Message signed successfully.`);
+      try {
+        console.log(`Signing message: ${message}`);
+        const signature = await this.keyService.signMessage(message);
+        console.log('Message signed successfully. Signature:', signature);
 
-      console.log(`Sending message: ${message} by user: ${user}`);
-      console.log('Signature generated: ' + signature);
-      this.socket.send(
-        JSON.stringify({
-          user,
-          message,
-          signature,
-        })
-      );
+        console.log(`Sending message: ${message} by user: ${user}`);
+        this.socket.send(
+          JSON.stringify({
+            user,
+            message,
+            signature,
+          })
+        );
+      } catch (error) {
+        console.error('Error signing or sending message:', error);
+      }
     } else {
       console.error('Cannot send message. WebSocket is not open.');
     }

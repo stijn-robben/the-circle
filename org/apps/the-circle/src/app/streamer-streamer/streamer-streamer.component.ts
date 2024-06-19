@@ -5,9 +5,13 @@ import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { Subscription, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-stream-list',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './streamer-streamer.component.html',
 })
 export class StreamStreamerComponent implements OnInit, OnDestroy {
