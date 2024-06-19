@@ -7,12 +7,21 @@ import { Router } from '@angular/router';
   templateUrl: './stream-list.component.html',
 })
 export class StreamListComponent implements OnInit {
+    username = ''; // Initialize username with an empty string
+
+
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.username = this.authService.getUsername()!;
+  }
 
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  startStreaming(): void {
+    this.router.navigate(['/streamer', this.username]);
   }
 }
