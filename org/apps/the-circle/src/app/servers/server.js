@@ -1,15 +1,15 @@
-const express = require("express");
-const http = require("http");
-const WebSocket = require("ws");
+const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server, path: "/chatHub" });
+const wss = new WebSocket.Server({ server, path: '/chatHub' });
 
-wss.on("connection", (ws) => {
-  console.log("New connection established");
+wss.on('connection', (ws) => {
+  console.log('New connection established');
 
-  ws.on("message", (message) => {
+  ws.on('message', (message) => {
     const parsedMessage = JSON.parse(message);
     console.log(
       `Received message from ${parsedMessage.user}: ${parsedMessage.message}`
@@ -30,12 +30,13 @@ wss.on("connection", (ws) => {
     });
   });
 
-  ws.on("close", () => {
-    console.log("Connection closed");
+  ws.on('close', () => {
+    console.log('Connection closed');
   });
 });
 
 const PORT = 5000;
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+const HOST = '145.49.14.169';
+server.listen(PORT, HOST, () => {
+  console.log(`Server is running on http://${HOST}:${PORT}`);
 });

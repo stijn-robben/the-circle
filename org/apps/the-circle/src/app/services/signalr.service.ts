@@ -26,7 +26,7 @@ export class SignalrService {
         this.publicKey = publicKey;
         console.log(`KeyService: Public key imported successfully.`);
         if (typeof window !== 'undefined' && 'WebSocket' in window) {
-          this.socket = new WebSocket('ws://localhost:5000/chatHub');
+          this.socket = new WebSocket('ws://145.49.14.169:5000/chatHub');
 
           this.socket.onopen = () => {
             console.log('Connection started');

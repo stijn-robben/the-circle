@@ -73,4 +73,5 @@ export class AuthService {
     console.log(`Get currentUsername from localStorage: ${username}`);
     return username;
   }
+  
 }
