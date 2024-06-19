@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './streamer-component.html',
 })
 export class ViewerComponent implements OnInit, OnDestroy {
-  public messages: string[] = [];
+  public messages: { user: string; message: string }[] = [];
   private subscription: Subscription | undefined;
   public user: string | null = ''; // Hardcoded viewer for testing
   public message = '';
@@ -30,10 +30,23 @@ export class ViewerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.authService.getUsername();
-    console.log('ViewerComponent: userLokalstorage:', this.user);
     this.subscription = this.signalRService.messages$.subscribe(
       (messages: string[]) => {
-        this.messages = messages;
+        messages.forEach((msg) => {
+          const parsedMsg = JSON.parse(msg);
+          const newMessage = {
+            user: parsedMsg.user,
+            message: parsedMsg.message,
+          };
+          if (
+            !this.messages.some(
+              (m) =>
+                m.message === newMessage.message && m.user === newMessage.user
+            )
+          ) {
+            this.messages.push(newMessage);
+          }
+        });
         this.scrollToBottom();
       }
     );
